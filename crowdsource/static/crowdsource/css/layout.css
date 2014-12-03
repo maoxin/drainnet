@@ -1,0 +1,244 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #FFF;
+    color: #333;
+    font-size: 14px;
+    overflow: hidden;
+    font-family: "Arial Narrow", Helvetica, Arial sans-serif;
+}
+
+#header {
+    overflow: hidden;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+}
+
+#title {
+    color: #FFF;
+    font-size: 30px;
+    font-weight: bolder;
+    float: left;
+    text-align: left;
+    padding-top: 10px;
+    padding-left: 25px;
+    text-shadow: 0 1px 0 #333;
+}
+
+#subtitle {
+    font-size: 15px;
+    color: #ccc;
+    float: left;
+    padding-left: 25px;
+    padding-top: 20px;
+}
+
+    #subtitle a {
+        font-size: 15px;
+        color: #ccc;
+        text-decoration: none;
+    }
+
+#map {
+    border: solid 4px #000;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    margin: 15px 15px 15px 15px;
+    padding: 0;
+    background-color: #eee;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#timePanel {
+    left: 50%;
+    margin: 0 auto;
+    margin-left: -500px;
+    position: absolute;
+    bottom: 2.5em;
+    display: none;
+}
+
+#timeInfo {
+    background-color: #eee;
+    border: solid 1px #eee;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    display: block;
+    padding: 5px;
+    position: relative;
+    text-align: center;
+    width: 1000px;
+    z-index: 99;
+    box-shadow: 2px 2px 3px #808080;
+}
+
+.close {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    right: 0px;
+    top: 0px;
+}
+
+    .close:hover {
+        cursor: pointer;
+    }
+
+
+#rightPane {
+    border: solid 4px #000;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    margin: 15px 0px 15px 0px;
+    padding: 10px 0px 10px 0px;
+    background-color: #eee;
+    width: 20%;
+    display: none;
+}
+
+    #rightPane .infoText {
+        color: #000;
+        font-size: 15px;
+        margin: 8px 20px 0px 20px;
+    }
+
+.layerGroup {
+    color: #fff;
+    margin: 20px 0px 5px 0px;
+    padding: 7px;
+    background-color: #808080;
+    font-size: 20px;
+}
+
+.layer {
+    color: #000;
+    margin: 5px 0px 5px 0px;
+    padding-left: 30px;
+    background-color: #eee;
+    font-size: 18px;
+}
+
+#toolbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+}
+
+    #toolbar .toolItem {
+        display: inline;
+        margin-right: 5px;
+        font-weight: bold;
+        color: #808080;
+        background-color: #FFF;
+        text-align: center;
+        padding: 6px;
+        text-decoration: none;
+        text-transform: uppercase;
+        background-image: none !important;
+    }
+
+        #toolbar .toolItem:hover {
+            background-color: #808080;
+            color: #FFF;
+            cursor: pointer;
+        }
+
+#basemapGallery {
+    max-height: 448px;
+    width: 380px;
+    position: fixed;
+    top: 60px;
+    right: 100px;
+    background-color: #eee;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    box-shadow: 2px 2px 3px #808080;
+    display: none;
+}
+
+#search {
+    display: block;
+    position: absolute;
+    z-index: 2;
+    top: 20px;
+    right: 22px;
+}
+
+#HomeButton {
+    position: absolute;
+    top: 95px;
+    left: 20px;
+    z-index: 50;
+    display: none;
+}
+
+#LocateButton {
+    position: absolute;
+    top: 138px;
+    left: 20px;
+    z-index: 50;
+    display: none;
+}
+
+#IdentifySwitch {
+    position: absolute;
+    top: 181px;
+    left: 20px;
+    z-index: 50;
+    padding: 2px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    background-color: rgba(102,102,102,0.80);
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    background-image: url(../images/switch.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: none;
+}
+
+    #IdentifySwitch:hover {
+        background-color: rgba(102,102,102,0.90);
+    }
+
+    #IdentifySwitch:active {
+        background-color: rgba(102,102,102,0.60);
+    }
+
+
+/* infowindow */
+
+table#InfoWindow {
+    padding: 0px;
+}
+
+    table#InfoWindow td.title {
+        width: 50px;
+        font-weight: bold;
+        font-size: 14px;
+        vertical-align: top;
+    }
+
+    table#InfoWindow td.content {
+        font-size: 12px;
+    }

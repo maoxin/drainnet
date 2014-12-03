@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+    <title>全球河网综合数据</title>
+    <!-- online API -->
+    <!--
+    <link rel="stylesheet" href="http://js.arcgis.com/3.10/js/dojo/dijit/themes/claro/claro.css" />
+    <link rel="stylesheet" href="http://js.arcgis.com/3.10/js/esri/css/esri.css" />
+    <script>var dojoConfig = { parseOnLoad: true };</script>
+    <script src="http://js.arcgis.com/3.10/"></script> -->
+    <!-- local API -->
+    <link rel="stylesheet" href="http://101.6.54.28/arcgis_js_api/library/3.10/3.10compact/js/dojo/dijit/themes/claro/claro.css" />
+    <link rel="stylesheet" href="http://101.6.54.28/arcgis_js_api/library/3.10/3.10compact/js/esri/css/esri.css" />
+    <script>
+        var dojoConfig = {
+            packages: [
+                    {
+                        name: "js",
+                        location: "{% static 'crowdsource/js' %}",
+                        // location: 'http://101.6.54.28/new/js',
+                    }
+            ]
+        };
+    </script>
+    <script src="http://101.6.54.28/arcgis_js_api/library/3.10/3.10compact/init.js"></script>
+
+    <link rel="stylesheet" href="{% static 'crowdsource/css/layout.css' %}" />
+
+    <script>
+        var debug = "debug";
+        var lat = {{ latitude }}
+        var lon = {{ longitude }}
+        var user_center = [lon, lat]
+        require(["js/global"], function (global) {
+            dojo.byId("HomeButton").style.display = "block";
+            dojo.byId("LocateButton").style.display = "block";
+            dojo.byId("IdentifySwitch").style.display = "block";
+        });
+
+        //rightPane
+        function rightPaneChange() {
+            var rightPane = dojo.byId("rightPane");
+            var show = true;
+            if (rightPane.style.display == "none" || rightPane.style.display == "") {
+                show = false;
+            }
+            if (show) {
+                dojo.style(rightPane, "margin-right", "0px");
+                dojo.byId("rightPane").style.display = "none";
+                dijit.byId("mainWindow").resize();
+            }
+            else {
+                dojo.style(rightPane, "margin-right", "15px");
+                dojo.byId("rightPane").style.display = "block";
+                dijit.byId("mainWindow").resize();
+            }
+        }
+
+        //timeSlider
+        function timeSliderChange() {
+            var timeSlider = dojo.byId("timePanel");
+            var show = true;
+            if (timeSlider.style.display == "none" || timeSlider.style.display == "") {
+                show = false;
+            }
+            if (show) {
+                timeSlider.style.display = "none";
+            }
+            else {
+                timeSlider.style.display = "block";
+            }
+        }
+
+        //basemap
+        function basemapChange() {
+            var basemapGallery = dojo.byId("basemapGallery");
+            show = basemapGallery.style.display;
+            if (show == "none" || show == "") {
+                basemapGallery.style.display = "block";
+            }
+            else {
+                basemapGallery.style.display = "none";
+            }
+        }
+
+    </script>
+    <script src="{% static 'crowdsource/js/mapWidgets.js' %}"></script>
+    <script src="{% static 'crowdsource/js/identify.js' %}"></script>
+
+</head>
+<body class="claro">
+    <div id="mainWindow" data-dojo-type="dijit.layout.BorderContainer" data-dojo-props="design:'headline',gutters:false" style="width: 100%; height: 100%;">
+
+        <!-- Header Section-->
+        <div id="header" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'top'">
+            <div id="title"">虚拟地球</div>
+            <ul id="toolbar">
+                <li class="toolItem" onclick="basemapChange()">底图</li>
+                <li class="toolItem" onclick="timeSliderChange()">时间轴</li>
+                <li class="toolItem" onclick="rightPaneChange()">数据图层</li>
+            </ul>
+        </div>
+
+
+        <!-- Map Section -->
+        <div id="map" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'center'">
+
+            <div id="search"></div>
+            <div id="HomeButton"></div>
+            <div id="LocateButton"></div>
+            <div id="IdentifySwitch"></div>
+            <div id="timePanel">
+                <div id="timeInfo">
+                    <div>时间选择：  <span id="daterange"><i></i></span></div>
+                    <div id="timeSliderDiv"></div>
+                    <div class="close" id="timeSliderClose" onclick="timeSliderChange()">
+                        <img src="{% static 'crowdsource/js/identify.js' %}" border="0" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div data-dojo-type="dijit.layout.ContentPane" id="rightPane" data-dojo-props="region:'right'">
+            <div class="close" id="rightPaneClose" onclick="rightPaneChange()">
+                <img src="{% static 'crowdsource/images/closepanel.png' %}" border="0" />
+            </div>
+            <div class="infoText">请选择需要在地图中显示的图层</div>
+        </div>
+
+
+    </div>
+    <div id="basemapGallery"></div>
+</body>
+</html>
