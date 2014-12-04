@@ -1,7 +1,9 @@
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from ipware.ip import get_ip
 import requests
 
+@ensure_csrf_cookie
 def index(request):
     ip = get_ip(request)
     print ip
@@ -15,3 +17,24 @@ def index(request):
     }
     
     return render(request, 'crowdsource/index.html', context)
+
+@csrf_exempt
+def river_name_input(request):
+    print get_ip(request)
+    print request.POST
+    river_name = request.POST['river_name']
+    latitude = request.POST['latitude']
+    longitude = request.POST['longitude']
+    
+    print 'river name:', river_name
+    print 'latitude:', latitude
+    print 'longitude:', longitude
+    
+    context = {
+        'river_name': river_name,
+        'latitude': latitude,
+        'longitude': longitude,
+    }
+    
+    return render(request, 'crowdsource/river_name_response.html', context)
+    

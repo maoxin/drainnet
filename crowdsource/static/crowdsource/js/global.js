@@ -25,7 +25,7 @@
             map = new Map("map", {
                 // center: [0, 0],
                 center: user_center,
-                zoom: 3,
+                zoom: 10,
                 basemap: "satellite",
                 logo: false,
                 sliderStyle: "small"
