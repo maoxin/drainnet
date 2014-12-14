@@ -25,6 +25,7 @@ def river_name_input(request):
     river_name = request.POST['river_name']
     latitude = request.POST['latitude']
     longitude = request.POST['longitude']
+    river_id = request.POST['river_id']
     
     print 'river name:', river_name
     print 'latitude:', latitude

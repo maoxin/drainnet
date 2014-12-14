@@ -1,4 +1,8 @@
-﻿require([
+﻿function updateRiverName() {
+    alert(dojo.byId('name_update').value);
+}
+
+require([
     "js/global",
     "dojo/on",
     "esri/symbols/SimpleMarkerSymbol",
@@ -30,6 +34,7 @@
         showXY: true,
         showAddress: true,
         showZ: true,
+        inputRiverName: true,
         showRiver: true
     }
 
@@ -46,6 +51,7 @@
                     );
     var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 255, 0]), 3);
 
+    //选择开关
     on(IdentifySwitch, "click", function (e) {
         identifyConfig.active = !identifyConfig.active;
         if (identifyConfig.active) {
@@ -66,28 +72,23 @@
         global.map.graphics.clear();
     })
 
-
+    //定义类IdentifyControl控制整个查询窗体
     declare("IdentifyControl", null, {
-
         infoWindow: null,
         identifyGroup: [],
-
-        constructor: function (infowindow) {
+        constructor: function (infowindow) {//构造方法，搭建一个infowindow
             this.infoWindow = infowindow;
         },
-
         add: function (identify) {
             this.identifyGroup.push(identify);
             identify.control = this;
         },
-
-        execute: function (mapPoint) {
+        execute: function (mapPoint) {//捕获点击事件
             for (var i = 0; i < this.identifyGroup.length; i++) {
                 this.identifyGroup[i].execute(mapPoint);
             }
         },
-
-        refresh: function () {
+        refresh: function () {//设置标题的内容
             var str = "<table id = \"InfoWindow\">"
             for (var i = 0; i < this.identifyGroup.length; i++) {
                 var identifyItem = this.identifyGroup[i];
@@ -98,59 +99,55 @@
             str = str + "</table>";
             this.infoWindow.setTitle("查询");
             this.infoWindow.setContent(str);
-        },
 
+            //on(document.getElementById("submit"), "click", function () {
+               // alert("2333");
+           // })
+        },
         clear: function () {
             for (var i = 0; i < this.identifyGroup.length; i++) {
                 this.identifyGroup[i].clear();
             }
         }
     });
-
+    
+    //定义类IdentifyBase显示所有标题和对应内容，也是下面所有类的父类
     declare("IdentifyBase", null, {
-
         title: "标题",
         content: "内容",
-
         control: null,
-
         execute: function (mapPoint) {
         },
-
-        notify: function () {
+        notify: function () {//notify调用refresh
             this.control.refresh();
         },
-
         clear: function () {
         }
-
     });
-
+    
+    //定义类CoordinateIdentify显示坐标
     declare("CoordinateIdentify", IdentifyBase, {
         title: "坐标",
         content: "请稍候...",
-
         execute: function (mapPoint) {
             var locationGeographic = webMercatorUtils.webMercatorToGeographic(mapPoint);
             this.content = "(" + Math.round(locationGeographic.x * 10000) / 10000 + ", " + Math.round(locationGeographic.y * 10000) / 10000 + ")";
             this.notify();
         },
-
         clear: function () {
             this.title = "坐标";
             this.content = "请稍候...";
         }
     });
 
+    //定义类AddressIdentify显示地址
     declare("AddressIdentify", IdentifyBase, {
         title: "地址",
         content: "请稍候...",
         locatorIdentify: null,
-
         constructor: function (severURL) {
             this.locatorIdentify = new Locator(severURL)
         },
-
         execute: function (mapPoint) {
             var locationGeographic = webMercatorUtils.webMercatorToGeographic(mapPoint);
             this.locatorIdentify.locationToAddress(locationGeographic, 1000);
@@ -169,26 +166,24 @@
             this.locatorIdentify.on("location-to-address-complete", onComplete);
             this.locatorIdentify.on("error", onError);
         },
-
         clear: function () {
             this.title = "地址";
             this.content = "请稍候...";
         }
     });
 
+    //定义类ElevIdentify显示高程
     declare("ElevIdentify", IdentifyBase, {
         title: "高程",
         content: "请稍候...",
         demIdentify: null,
         layerIds: [],
         map: null,
-
         constructor: function (serverURL, layerIds, map) {
             this.demIdentify = new IdentifyTask(serverURL);
             this.layerIds = layerIds;
             this.map = map;
         },
-
         execute: function (mapPoint) {
             var demIdentifyParams = new IdentifyParameters();
             demIdentifyParams.tolerance = 0;
@@ -212,24 +207,65 @@
             }
             this.demIdentify.execute(demIdentifyParams, onComplete, onError);
         },
-
         clear: function () {
             this.title = "高程";
             this.content = "请稍候...";
         }
     });
 
+    //定义类inputRiverName显示或输入河流名称
+    declare("InputRiverName", IdentifyBase, {
+        title: "河段名称",
+        content:"请稍候..." ,
+        execute: function (mapPoint) {
+            /*var riverIdentifyParams = new IdentifyParameters();
+            riverIdentifyParams.tolerance = 5;
+            riverIdentifyParams.returnGeometry = true;
+            riverIdentifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
+            riverIdentifyParams.width = this.map.width;
+            riverIdentifyParams.height = this.map.height;
+            riverIdentifyParams.geometry = mapPoint;
+            riverIdentifyParams.mapExtent = this.map.extent;
+            var that = this;
+            this.riverIdentify.execute(riverIdentifyParams, function (idResults) {
+                if (idResults.length <= 0) {
+                    that.content = "未选中任何河段";
+                }
+                else {
+                    var idResult = idResults[0];                                                           
+                }
+            });
+            */
+            var that = this;
+            this.content = "<h1>"+"2222"+"</h1>"+"<input id='name_update' type='text' name='name'>"
+                 + "<button id='submit' onclick='updateRiverName()'>" + "提交" + "</button>";
+            that.notify();
+        },
+        clear: function () {
+            this.title = "河段名称";
+            this.content = "请稍候...";
+        },
+            /*
+            var feature = idResult.feature;
+            feature.setSymbol(lineSymbol);
+            that.map.graphics.add(feature);
+            var attributes = feature.attributes;
+            idResult.getLayer().applyEdits(null, [idResult], null);
+            attributes[OBJECTID] = dojo.byId("text").value;
+            alert(attributes[OBJECTID]);
+        }*/
+    });
+
+    //定义类RiverIdentify显示河段信息
     declare("RiverIdentify", IdentifyBase, {
         title: "河段信息",
         content: "请稍候...",
         riverIdentify: null,
         map: null,
-
         constructor: function (serverURL, map) {
             this.riverIdentify = new IdentifyTask(serverURL);
             this.map = map;
         },
-
         execute: function (mapPoint) {
             var riverIdentifyParams = new IdentifyParameters();
             riverIdentifyParams.tolerance = 5;
@@ -264,7 +300,6 @@
                 that.notify();
             });
         },
-
         clear: function () {
             this.title = "河段信息";
             this.content = "请稍候...";
@@ -279,6 +314,8 @@
         identifyControl.add(new AddressIdentify("http://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"));
     if (identifyConfig.showZ)
         identifyControl.add(new ElevIdentify(global.demURL, [3, ], global.map));
+    if (identifyConfig.inputRiverName)
+        identifyControl.add(new InputRiverName());
     if (identifyConfig.showRiver)
         identifyControl.add(new RiverIdentify(global.layers[0].url, global.map));
 
