@@ -14,7 +14,7 @@
         }
     }
     xmlhttp.open("POST","http://121.41.106.13:8000/crowdsource/river_name_input/", true);
-    xmlhttp.setRequestHeader("Content-type", "application/json");
+    xmlhttp.setRequestHeader("Content-type", "application/json;charset=UTF-8");
     xmlhttp.send(data);
 }
 
