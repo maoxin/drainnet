@@ -1,5 +1,21 @@
 ﻿function updateRiverName() {
-    alert(dojo.byId('name_update').value);
+    var jsonobject = { "河段名称": dojo.byId("name_update").value };
+    var data = JSON.stringify(jsonobject);
+    var xmlhttp;
+    if (window.XMLHttpRequest) {
+        xmlhttp = new XMLHttpRequest();
+    }
+    else {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            alert(xmlhttp.readyState);
+        }
+    }
+    xmlhttp.open("POST","http://121.41.106.13:8000/crowdsource/river_name_input/", true);
+    xmlhttp.setRequestHeader("Content-type", "application/json");
+    xmlhttp.send(data);
 }
 
 require([
@@ -218,26 +234,8 @@ require([
         title: "河段名称",
         content:"请稍候..." ,
         execute: function (mapPoint) {
-            /*var riverIdentifyParams = new IdentifyParameters();
-            riverIdentifyParams.tolerance = 5;
-            riverIdentifyParams.returnGeometry = true;
-            riverIdentifyParams.layerOption = IdentifyParameters.LAYER_OPTION_VISIBLE;
-            riverIdentifyParams.width = this.map.width;
-            riverIdentifyParams.height = this.map.height;
-            riverIdentifyParams.geometry = mapPoint;
-            riverIdentifyParams.mapExtent = this.map.extent;
             var that = this;
-            this.riverIdentify.execute(riverIdentifyParams, function (idResults) {
-                if (idResults.length <= 0) {
-                    that.content = "未选中任何河段";
-                }
-                else {
-                    var idResult = idResults[0];                                                           
-                }
-            });
-            */
-            var that = this;
-            this.content = "<h1>"+"2222"+"</h1>"+"<input id='name_update' type='text' name='name'>"
+            this.content ="<input id='name_update' type='text' name='name'>"
                  + "<button id='submit' onclick='updateRiverName()'>" + "提交" + "</button>";
             that.notify();
         },
@@ -245,15 +243,6 @@ require([
             this.title = "河段名称";
             this.content = "请稍候...";
         },
-            /*
-            var feature = idResult.feature;
-            feature.setSymbol(lineSymbol);
-            that.map.graphics.add(feature);
-            var attributes = feature.attributes;
-            idResult.getLayer().applyEdits(null, [idResult], null);
-            attributes[OBJECTID] = dojo.byId("text").value;
-            alert(attributes[OBJECTID]);
-        }*/
     });
 
     //定义类RiverIdentify显示河段信息
