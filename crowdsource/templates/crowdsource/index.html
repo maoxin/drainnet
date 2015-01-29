@@ -31,6 +31,8 @@
 
     <script>
         var debug = "debug";
+        var local_host = "http://101.5.108.135:8000/"
+        // var local_host = "http://59.66.169.17:8000/"
         var lat = {{ latitude }}
         var lon = {{ longitude }}
         var user_center = [lon, lat]
@@ -88,6 +90,8 @@
 
     </script>
     <script src="{% static 'crowdsource/js/mapWidgets.js' %}"></script>
+    <script src="{% static 'crowdsource/js/name.js' %}"></script>
+    <script src="{% static 'crowdsource/js/point.js' %}"></script>
     <script src="{% static 'crowdsource/js/identify.js' %}"></script>
 
 </head>
