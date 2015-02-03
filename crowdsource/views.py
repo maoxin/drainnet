@@ -1,9 +1,10 @@
 # _*_coding:utf-8_*_
 
 from django.shortcuts import render
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from ipware.ip import get_ip
-from models import Point
+from models import Point, FixPoint, DeleteRiver
 import requests
 import json
 
@@ -26,10 +27,11 @@ def index(request):
 def river_name_input(request):
     print get_ip(request)
     print request.POST
-    river_name = json.loads(request.POST['river_name'])
-    for i in river_name:
-        print i
-        print river_name[i]
+    river_info = json.loads(request.POST['river_name'])
+    river_name = river_info['river_name']
+    object_id = river_info['object_id']
+    print river_name
+    print object_id
     # latitude = request.POST['latitude']
     # longitude = request.POST['longitude']
     # river_id = request.POST['river_id']
@@ -38,16 +40,17 @@ def river_name_input(request):
     # print 'latitude:', latitude
     # print 'longitude:', longitude
     
-    context = {
-        'river_name': 'yr',
+    # context = {
+        # 'river_name': 'yr',
         # 'latitude': latitude,
         # 'longitude': longitude,
-    }
+    # }
     
-    P = Point(point_name=river_name)
+    P = Point(point_name=river_name, object_id=object_id)
     P.save()
     
-    return render(request, 'crowdsource/river_name_response.html', context)
+    # return render(request, 'crowdsource/river_name_response.html', context)
+    return HttpResponse(status=200)
     
 @csrf_exempt
 def fix_point(request):
@@ -58,14 +61,35 @@ def fix_point(request):
         print i
         print fix_point[i]
         
-    ObjectID = fix_point['ObjectID']
-    X = fix_point['X']
-    Y = fix_point['Y']
+    object_id = fix_point['object_id']
+    latitude = fix_point['latitude']
+    longitude = fix_point['longitude']
     
-    context = {
-        'ObjectID': ObjectID,
-        'X': X,
-        'Y': Y,
-    }
+    FP = FixPoint(object_id=object_id, fix_latitude=latitude, fix_longitude=longitude)
+    FP.save()
     
-    return render(request, 'crowdsource/fix_point_response.html', context)
+    # context = {
+        # 'ObjectID': ObjectID,
+        # 'X': X,
+        # 'Y': Y,
+    # }
+    
+    # return render(request, 'crowdsource/fix_point_response.html', context)
+    return HttpResponse(status=200)
+    
+@csrf_exempt
+def delete_river(request):
+    print get_ip(request)
+    print request.POST
+    dl_river = json.loads(request.POST['delete_river'])
+    for i in dl_river:
+        print i
+        print dl_river[i]
+        
+    object_id = dl_river['object_id']
+    DR = DeleteRiver(object_id=object_id)
+    DR.save()
+    
+    return HttpResponse(status=200)
+    
+    

@@ -14,6 +14,16 @@
     <!-- local API -->
     <link rel="stylesheet" href="http://101.6.54.28/arcgis_js_api/library/3.10/3.10compact/js/dojo/dijit/themes/claro/claro.css" />
     <link rel="stylesheet" href="http://101.6.54.28/arcgis_js_api/library/3.10/3.10compact/js/esri/css/esri.css" />
+    
+    <script>
+        // some global variable
+        var local_host = "http://101.5.232.214:8000/"
+        // var local_host = "http://59.66.169.17:8000/"
+        var static_path = "{% static 'crowdsource/' %}"
+        // var dem_image = "{% static 'crowdsource/images/dem.jpg' %}"
+        
+    </script>
+        
     <script>
         var dojoConfig = {
             packages: [
@@ -31,8 +41,6 @@
 
     <script>
         var debug = "debug";
-        var local_host = "http://121.41.106.13:8000/"
-        // var local_host = "http://59.66.169.17:8000/"
         var lat = {{ latitude }}
         var lon = {{ longitude }}
         var user_center = [lon, lat]

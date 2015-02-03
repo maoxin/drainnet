@@ -25,7 +25,8 @@
                 url: global.demURL
             })],
             title: "数字高程模型",
-            thumbnailUrl: "images/dem.jpg"
+            // thumbnailUrl: dem_image
+            thumbnailUrl: static_path + 'images/dem.jpg'
         });
         basemapGallery.add(dem);
         basemapGallery.startup();
