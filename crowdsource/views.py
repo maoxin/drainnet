@@ -11,7 +11,7 @@ import json
 @ensure_csrf_cookie
 def index(request):
     ip = get_ip(request)
-    print ip
+    #print ip
     # geo = GeoIP()
     ip2location = requests.get('http://ipinfo.io/%s/json/' %ip).json()
     latitude, longitude = eval(ip2location['loc'])
@@ -25,13 +25,13 @@ def index(request):
 
 @csrf_exempt
 def river_name_input(request):
-    print get_ip(request)
-    print request.POST
+    # print get_ip(request)
+    # print request.POST
     river_info = json.loads(request.POST['river_name'])
     river_name = river_info['river_name']
     object_id = river_info['object_id']
-    print river_name
-    print object_id
+    # print river_name
+    # print object_id
     # latitude = request.POST['latitude']
     # longitude = request.POST['longitude']
     # river_id = request.POST['river_id']
@@ -48,14 +48,15 @@ def river_name_input(request):
     
     P = Point(point_name=river_name, object_id=object_id)
     P.save()
+    # print 'saved'
     
     # return render(request, 'crowdsource/river_name_response.html', context)
     return HttpResponse(status=200)
     
 @csrf_exempt
 def fix_point(request):
-    print get_ip(request)
-    print request.POST
+    # print get_ip(request)
+    # print request.POST
     fix_point = json.loads(request.POST['fix_point'])
     for i in fix_point:
         print i
@@ -79,8 +80,8 @@ def fix_point(request):
     
 @csrf_exempt
 def delete_river(request):
-    print get_ip(request)
-    print request.POST
+    # print get_ip(request)
+    # print request.POST
     dl_river = json.loads(request.POST['delete_river'])
     for i in dl_river:
         print i
