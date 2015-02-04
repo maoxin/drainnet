@@ -1,5 +1,6 @@
-﻿//点击：identifyCrontrol.add->identifyCrontrol.clear()->identifyCrontrol.execute()->
-//各子类execute()->各子类notify()->identifyCrontrol.refresh()
+﻿//点击：identifyCrontrol.add->identifyCrontrol.clear()->各子类execute()->
+//河段信息、地址、高程的查询（特征提取回调函数中放入infoWindow更新）->
+//回调函数执行完后identifyCrontrol.refresh()
 
 var ObjectID;//河段ID
 var SelectedObjectID; // used when correct location
@@ -11,7 +12,7 @@ var lineFeature;//记录设置好河段线高亮的feature以便随时高亮
 var control//记录identifyControl以便随时操作infoWindow
 
 var identifyConfig = {//显示何种信息的判断标志
-    active: false,
+    active: true,
     showXY: true,
     showAddress: true,
     showZ: true,
@@ -46,9 +47,7 @@ require([
     Locator,
     IdentifyTask,
     IdentifyParameters) {
-
-    var IdentifySwitch = dojo.byId("IdentifySwitch");//选择开关
-    var identifyHandler;//与选择开关捆绑的的点击图层事件
+    
     var circleSymbol = new SimpleMarkerSymbol(//点击鼠标点的高亮
                     SimpleMarkerSymbol.STYLE_CIRCLE,
                     10,
@@ -62,6 +61,7 @@ require([
     var lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([0, 255, 0]), 3);
 
     //选择点的开关
+    /*var IdentifySwitch = dojo.byId("IdentifySwitch");//选择开关
     on(IdentifySwitch, "click", function (e) {
         identifyConfig.active = !identifyConfig.active;
         if (identifyConfig.active) {//开关边框高亮
@@ -76,7 +76,7 @@ require([
             identifyHandler.remove();
             global.map.infoWindow.hide();
         }
-    });
+    });*/
 
     //定义类IdentifyControl控制整个查询窗体
     declare("IdentifyControl", null, {
@@ -111,7 +111,10 @@ require([
         },
         clear: function () {//初始化infoWindow内容
             this.infoWindow.setTitle(isModifying ? "请在地图上选择点" : "查询");
-            this.infoWindow.setContent("请稍后...");
+            this.infoWindow.setContent("请稍候...");
+            for (var i = 0; i < this.identifyGroup.length; i++) {
+                this.identifyGroup[i].clear();
+            }
         }
     });
 
@@ -150,7 +153,7 @@ require([
                         if (name == "OBJECTID") ObjectID = value;//提取OBJECTID
                     }
                 }
-                identifyControl.execute(mapPoint);//infoWindow内容改变
+                identifyControl.execute(mapPoint);//infoWindow内容改变，在回调函数中保证显示内容正确
                 identifyControl.refresh();
             });
         }
@@ -162,6 +165,9 @@ require([
         content: "内容",
         control: null,//指向identifyControl
         execute: function (mapPoint) {
+        },
+        clear: function () {
+            this.content = "请稍候...";
         }
     });
 
@@ -193,10 +199,12 @@ require([
                 if (evt.address.address) {
                     var address = evt.address.address.Address;
                     that.content = address;
+                    identifyControl.refresh();
                 }
             };
             var onError = function (evt) {
                 that.content = "无法获取";
+                identifyControl.refresh();
             };
             this.locatorIdentify.on("location-to-address-complete", onComplete);
             this.locatorIdentify.on("error", onError);
@@ -230,9 +238,11 @@ require([
                 var z = idResults[0]["feature"]["attributes"]["Pixel Value"];
                 z = Math.round(z * 100) / 100.0;
                 that.content = z + " m";
+                identifyControl.refresh();
             };
             var onError = function () {
                 that.content = "无法获取";
+                identifyControl.refresh();
             }
             this.demIdentify.execute(demIdentifyParams, onComplete, onError);
         }
@@ -294,10 +304,12 @@ require([
             identifyControl.add(modifyPoint);
     }
 
+    var identifyHandler;//点击图层事件
+    identifyHandler = on(global.map, "click", mapClick);//生成一个点击事件，处理函数为mapClick
     function mapClick(evt) {//点击事件处理函数
+        identifyControl.clear();//初始化为"请稍候..."
         initializeInfo();//清空
         addInfo();//添加信息
-        identifyControl.clear();//初始化为“请稍后”
         global.map.graphics.clear();//清除GraphicsLayer中原有的graphic对象
         var location = evt.mapPoint;//点对象
         var graphic = new Graphic(location, circleSymbol, null, null);
