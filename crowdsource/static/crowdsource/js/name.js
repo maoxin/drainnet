@@ -10,7 +10,8 @@ function updateRiverName() {
     xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            alert(xmlhttp.readyState);
+            // alert(xmlhttp.readyState);
+            alert("提交成功！")
         }
     }
     
@@ -23,14 +24,14 @@ function updateRiverName() {
 
 //删除河段
 function deleteThisRiver() {
-    alert(ObjectID);
+    // alert(ObjectID);
     var jsonobject = { "object_id": ObjectID };//json对象
     var data = JSON.stringify(jsonobject);//转码
     var xmlhttp;
     xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            alert(xmlhttp.readyState);
+            alert("删除请求提交成功！");
         }
     }
     xmlhttp.open("POST", local_host + "crowdsource/delete_river/", true);

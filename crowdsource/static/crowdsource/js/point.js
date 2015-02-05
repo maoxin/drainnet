@@ -1,6 +1,6 @@
 ﻿//开启选择点功能的相应函数
 function updatePoint() {
-    alert("请在地图上选择点");
+    alert("请在地图上选择点！");
     SelectedObjectID = ObjectID;
     //设置infoWindow以下信息不显示
     identifyConfig.showAddress = false;
@@ -29,7 +29,7 @@ function conveyPointXY() {
     xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-            alert(xmlhttp.readyState);
+            alert("请选择下一点！点击“修改完成”结束操作");
         }
     }
     xmlhttp.open("POST", local_host + "crowdsource/fix_point/", true);
