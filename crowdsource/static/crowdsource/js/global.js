@@ -30,6 +30,12 @@
                 logo: false,
                 sliderStyle: "small"
             });
+            
+            map.on('zoom-end', function(e) {
+                if (e.level > 12) {
+                    map.setZoom(12);
+                }
+            });
 
             layers.sort(function layerorder(a, b) {
                 return a.id - b.id;

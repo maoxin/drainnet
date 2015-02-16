@@ -14,12 +14,18 @@ def index(request):
     #print ip
     # geo = GeoIP()
     ip2location = requests.get('http://ipinfo.io/%s/json/' %ip).json()
-    latitude, longitude = eval(ip2location['loc'])
-    # need more constraint to avoid wrong ip, which causes 'loc': u''
-    context = {
-        'latitude': float(latitude),
-        'longitude': float(longitude),
-    }
+    try:
+        latitude, longitude = eval(ip2location['loc'])
+        # need more constraint to avoid wrong ip, which causes 'loc': u''
+        context = {
+            'latitude': float(latitude),
+            'longitude': float(longitude),
+        }
+    except KeyError:
+        context = {
+            'latitude': 39.9139,
+            'longitude': 116.3917,
+        }
     
     return render(request, 'crowdsource/index.html', context)
 
